@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastering Prompt Engineering</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light blue-gray background */
+            color: #334155; /* Dark slate gray text */
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .card {
+            background-color: #ffffff;
+            border-radius: 1.5rem; /* More rounded corners */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+        .btn-primary {
+            background-color: #4f46e5; /* Indigo */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem; /* Rounded button */
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .btn-primary:hover {
+            background-color: #4338ca; /* Darker indigo */
+        }
+        .btn-secondary {
+            background-color: #e0e7ff; /* Light indigo */
+            color: #4f46e5; /* Indigo text */
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .btn-secondary:hover {
+            background-color: #c7d2fe; /* Lighter indigo */
+        }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            border: 1px solid #cbd5e1; /* Slate 300 */
+            border-radius: 0.75rem;
+            padding: 1rem;
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease-in-out;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #6366f1; /* Indigo 500 */
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+        .output-box {
+            background-color: #f8fafc; /* Lightest blue-gray */
+            border: 1px dashed #94a3b8; /* Slate 400 dashed border */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            min-height: 120px;
+            white-space: pre-wrap; /* Preserve whitespace and wrap text */
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            color: #475569; /* Slate 600 */
+        }
+        .accordion-header {
+            cursor: pointer;
+            padding: 1rem 1.5rem;
+            background-color: #eff6ff; /* Blue 50 */
+            border-radius: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s ease-in-out;
+        }
+        .accordion-header:hover {
+            background-color: #e0e7ff; /* Blue 100 */
+        }
+        .accordion-content {
+            padding: 1.5rem;
+            background-color: #f8fafc; /* Lightest blue-gray */
+            border-radius: 0 0 0.75rem 0.75rem;
+            border-top: 1px solid #e2e8f0; /* Slate 200 */
+            display: none; /* Hidden by default */
+        }
+        .accordion-content.active {
+            display: block;
+        }
+        .icon-rotate {
+            transition: transform 0.3s ease-in-out;
+        }
+        .icon-rotate.rotated {
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+<body class="p-8">
+    <div class="container mx-auto">
+        <header class="text-center mb-12">
+            <h1 class="text-5xl font-extrabold text-gray-900 mb-4 leading-tight">Mastering <span class="text-indigo-600">Prompt Engineering</span></h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">Unlock the full potential of AI by learning to craft effective prompts for text-to-text models like ChatGPT, Claude, and Gemini.</p>
+        </header>
+
+        <!-- Introduction -->
+        <section class="card">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">1. Introduction to Prompt Engineering</h2>
+            <p class="text-lg text-gray-700 mb-4">Prompt engineering is both an art and a science of designing and optimizing inputs (prompts) for AI models. Think of a prompt as a "roadmap" for the AI, guiding it to understand your intent and generate the desired response. Without effective prompts, AI can produce generic, irrelevant, or even inaccurate answers.</p>
+            <p class="text-lg text-gray-700">This course will equip you with the knowledge to structure effective prompts, understand how minor adjustments influence AI output, and apply practical techniques for consistent, high-quality results.</p>
+        </section>
+
+        <!-- CTFCE Framework -->
+        <section class="card">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">2. The Google Prompt Engineering Framework: CTFCE</h2>
+            <p class="text-lg text-gray-700 mb-8">The CTFCE framework provides a systematic approach to designing effective prompts, ensuring all critical elements are considered. It stands for:</p>
+
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-blue-50 p-6 rounded-xl shadow-sm">
+                    <h3 class="text-xl font-semibold text-blue-800 mb-2"><i class="fas fa-info-circle mr-2"></i>Context</h3>
+                    <p class="text-blue-700">Background information the model needs to understand the task.</p>
+                </div>
+                <div class="bg-green-50 p-6 rounded-xl shadow-sm">
+                    <h3 class="text-xl font-semibold text-green-800 mb-2"><i class="fas fa-tasks mr-2"></i>Task</h3>
+                    <p class="text-green-700">Clear, actionable instructions on what the model should do.</p>
+                </div>
+                <div class="bg-purple-50 p-6 rounded-xl shadow-sm">
+                    <h3 class="text-xl font-semibold text-purple-800 mb-2"><i class="fas fa-list-alt mr-2"></i>Format</h3>
+                    <p class="text-purple-700">Desired output structure (e.g., list, paragraph, JSON).</p>
+                </div>
+                <div class="bg-red-50 p-6 rounded-xl shadow-sm">
+                    <h3 class="text-xl font-semibold text-red-800 mb-2"><i class="fas fa-ban mr-2"></i>Constraints</h3>
+                    <p class="text-red-700">Limitations or boundaries (e.g., word count, tone).</p>
+                </div>
+                <div class="bg-yellow-50 p-6 rounded-xl shadow-sm">
+                    <h3 class="text-xl font-semibold text-yellow-800 mb-2"><i class="fas fa-lightbulb mr-2"></i>Examples</h3>
+                    <p class="text-yellow-700">Show the model what to do by providing input-output pairs.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Context Section -->
+        <section class="card">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">2.1. Context: Setting the Scene</h2>
+            <p class="text-lg text-gray-700 mb-4">Context provides the background information an LLM needs to fully comprehend your request. It helps the AI generate relevant and precise outputs, avoiding generic responses.</p>
+
+            <div class="mb-8">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Interactive Example: Context</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="font-medium mb-2">Bad Prompt (No Context):</p>
+                        <textarea id="context-bad-prompt" class="w-full mb-4" readonly>Tell me about AI.</textarea>
+                        <button class="btn-primary w-full" onclick="simulateOutput('context-bad')">Simulate AI Output</button>
+                        <p class="font-medium mt-4 mb-2">Simulated AI Output:</p>
+                        <div id="context-bad-output" class="output-box">
+                            AI stands for Artificial Intelligence. It's a broad field of computer science that gives machines the ability to perform tasks that typically require human intelligence. This includes learning, problem-solving, decision-making, and understanding language. AI is used in many applications like virtual assistants, recommendation systems, and self-driving cars.
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-medium mb-2">Good Prompt (With Context):</p>
+                        <textarea id="context-good-prompt" class="w-full mb-4" readonly>Considering the recent advancements in machine learning, discuss how AI can enhance predictive analytics in finance. Focus on applications for financial institutions.</textarea>
+                        <button class="btn-primary w-full" onclick="simulateOutput('context-good')">Simulate AI Output</button>
+                        <p class="font-medium mt-4 mb-2">Simulated AI Output:</p>
+                        <div id="context-good-output" class="output-box">
+                            Recent machine learning advancements have significantly boosted AI's role in predictive analytics for finance. Financial institutions are leveraging AI to enhance fraud detection by identifying unusual transaction patterns, improve credit scoring models with more nuanced risk assessments, and optimize trading strategies through real-time market analysis. AI also aids in personalized financial advice and regulatory compliance by processing vast datasets efficiently.
+                        </div>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-600 mt-4 italic">Notice how adding context ("recent advancements in machine learning," "finance," "financial institutions") makes the AI's response much more focused and valuable.</p>
+            </div>
+        </section>
+
+        <!-- Task Section -->
+        <section class="card">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">2.2. Task: Clear Instructions</h2>
+            <p class="text-lg text-gray-700 mb-4">The Task component defines what the LLM should accomplish using clear, actionable instructions and strong action verbs. Avoid overloading a single prompt with multiple, unrelated tasks.</p>
+
+            <div class="mb-8">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Interactive Example: Task</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="font-medium mb-2">Bad Prompt (Vague Task):</p>
+                        <textarea id="task-bad-prompt" class="w-full mb-4" readonly>Write an article.</textarea>
+                        <button class="btn-primary w-full" onclick="simulateOutput('task-bad')">Simulate AI Output</button>
+                        <p class="font-medium mt-4 mb-2">Simulated AI Output:</p>
+                        <div id="task-bad-output" class="output-box">
+                            Here is an article:
+                            The Importance of Daily Exercise
+                            Regular physical activity is crucial for maintaining good health. It helps in weight management, strengthens bones and muscles, and reduces the risk of chronic diseases such as heart disease and diabetes. Exercise also has significant mental health benefits, reducing stress and improving mood. Incorporating even moderate exercise into your daily routine can lead to a healthier and happier life.
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-medium mb-2">Good Prompt (Clear Task):</p>
+                        <textarea id="task-good-prompt" class="w-full mb-4" readonly>Write a 500-word blog post on prompt engineering for marketers. Make it clear and slightly casual, aimed at beginners, and include a few examples of good prompts for marketing tasks.</textarea>
+                        <button class="btn-primary w-full" onclick="simulateOutput('task-good')">Simulate AI Output</button>
+                        <p class="font-medium mt-4 mb-2">Simulated AI Output:</p>
+                        <div id="task-good-output" class="output-box">
+                            **Prompt Engineering for Marketers: Your AI Superpower!**
+
+                            Hey marketers! Ever feel like your AI tools aren't quite "getting" you? You ask for a social media post, and you get something… generic? The secret isn't smarter AI; it's smarter *you* – specifically, how you talk to it. Welcome to the world of prompt engineering, your new superpower for getting amazing results from ChatGPT, Gemini, and other AI models.
+
+                            Think of prompt engineering as giving your AI crystal-clear instructions. Instead of a vague "Write a blog post," you provide a roadmap: what it's about, who it's for, how long it should be, and even the tone. The more precise you are, the better the AI can predict exactly what you want.
+
+                            ... (truncated for brevity, imagine a full 500-word blog post with examples)
+                        </div>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-600 mt-4 italic">The good prompt specifies the topic, length, audience, tone, and what to include, leading to a much more targeted output.</p>
+            </div>
+        </section>
+
+        <!-- Format Section -->
+        <section class="card">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">2.3. Format: Structuring the Output</h2>
+            <p class="text-lg text-gray-700 mb-4">Format dictates the desired structure of the AI's output. This can be a paragraph, bulleted list, JSON, table, or Markdown. Specifying the format makes responses easy to consume or integrate.</p>
+
+            <div class="mb-8">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Interactive Example: Format</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="font-medium mb-2">Prompt (No Format):</p>
+                        <textarea id="format-bad-prompt" class="w-full mb-4" readonly>Summarize the main points of the following news article on climate change:
+                            "A recent report from the IPCC highlights the accelerating pace of global warming, emphasizing the urgent need for drastic emission reductions. It details the impact of human activities on rising sea levels, extreme weather events, and biodiversity loss. The report stresses that limiting global warming to 1.5°C requires immediate and widespread systemic changes across all sectors, including energy, industry, transport, and agriculture. It also points to the potential for carbon capture technologies and the importance of international cooperation."</textarea>
+                        <button class="btn-primary w-full" onclick="simulateOutput('format-bad')">Simulate AI Output</button>
+                        <p class="font-medium mt-4 mb-2">Simulated AI Output:</p>
+                        <div id="format-bad-output" class="output-box">
+                            The IPCC's latest report underscores the rapid acceleration of global warming, calling for urgent and substantial emission cuts. It outlines how human actions are contributing to rising sea levels, more frequent extreme weather, and the decline of biodiversity. Achieving the 1.5°C warming limit necessitates immediate and broad systemic changes across various sectors like energy, industry, transport, and agriculture. The report also mentions the role of carbon capture and international collaboration.
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-medium mb-2">Prompt (With Format: Bullet Points):</p>
+                        <textarea id="format-good-prompt" class="w-full mb-4" readonly>Summarize the main points of the following news article on climate change in three bullet points:
+                            "A recent report from the IPCC highlights the accelerating pace of global warming, emphasizing the urgent need for drastic emission reductions. It details the impact of human activities on rising sea levels, extreme weather events, and biodiversity loss. The report stresses that limiting global warming to 1.5°C requires immediate and widespread systemic changes across all sectors, including energy, industry, transport, and agriculture. It also points to the potential for carbon capture technologies and the importance of international cooperation."</textarea>
+                        <button class="btn-primary w-full" onclick="simulateOutput('format-good')">Simulate AI Output</button>
+                        <p class="font-medium mt-4 mb-2">Simulated AI Output:</p>
+                        <div id="format-good-output" class="output-box">
+                            * The IPCC report warns of accelerating global warming and the urgent need for drastic emission reductions.
+                            * Human activities are causing rising sea levels, extreme weather, and biodiversity loss.
+                            * Limiting warming to 1.5°C requires immediate, widespread systemic changes across all major sectors and international cooperation.
+                        </div>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-600 mt-4 italic">By specifying "in three bullet points," the AI provides a structured, easily digestible summary.</p>
+            </div>
+        </section>
+
+        <!-- Constraints Section -->
+        <section class="card">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">2.4. Constraints: Setting Boundaries</h2>
+            <p class="text-lg text-gray-700 mb-4">Constraints are limitations the LLM must adhere to, such as word count, tone, or specific exclusions. They refine the scope of the response, ensuring it meets specific requirements.</p>
+
+            <div class="mb-8">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Interactive Example: Constraints</h3>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="font-medium mb-2">Prompt (No Constraint):</p>
+                        <textarea id="constraints-bad-prompt" class="w-full mb-4" readonly>Provide a summary of AI ethics concerns.</textarea>
+                        <button class="btn-primary w-full" onclick="simulateOutput('constraints-bad')">Simulate AI Output</button>
+                        <p class="font-medium mt-4 mb-2">Simulated AI Output:</p>
+                        <div id="constraints-bad-output" class="output-box">
+                            AI ethics concerns encompass a wide range of issues arising from the development and deployment of artificial intelligence. Key areas include bias and fairness, where AI systems can perpetuate or amplify existing societal biases if not carefully designed and trained. Transparency and explainability are also critical, as it can be difficult to understand how complex AI models arrive at their decisions, raising questions of accountability. Privacy concerns are paramount, given AI's ability to process vast amounts of personal data. Other issues involve job displacement due to automation, the potential for autonomous weapons, and the broader societal impact on human agency and decision-making. Ensuring robust governance and regulation is essential to navigate these complex ethical landscapes responsibly.
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-medium mb-2">Prompt (With Constraint: Word Count):</p>
+                        <textarea id="constraints-good-prompt" class="w-full mb-4" readonly>Provide a summary of AI ethics concerns in no more than 200 words.</textarea>
+                        <button class="btn-primary w-full" onclick="simulateOutput('constraints-good')">Simulate AI Output</button>
+                        <p class="font-medium mt-4 mb-2">Simulated AI Output:</p>
+                        <div id="constraints-good-output" class="output-box">
+                            AI ethics concerns are multifaceted. Bias and fairness are major issues, as AI can reflect or amplify societal prejudices from its training data, leading to discriminatory outcomes. Transparency and explainability are critical; understanding how AI makes decisions is vital for trust and accountability, especially in sensitive applications. Privacy is another key concern, given AI's capacity to collect and analyze vast personal datasets. The potential for job displacement due to automation raises socio-economic questions. Additionally, the development of autonomous weapons systems and the broader impact on human agency and control are significant ethical dilemmas. Addressing these requires careful design, regulation, and ongoing societal dialogue.
+                        </div>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-600 mt-4 italic">The word count constraint ensures a concise summary, adhering to the specified length.</p>
+            </div>
+        </section>
+
+        <!-- Examples Section -->
+        <section class="card">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">2.5. Examples: Show, Don't Just Tell (Few-Shot Learning)</h2>
+            <p class="text-lg text-gray-700 mb-4">Providing one or more examples of the desired input-output pattern (few-shot prompting) helps the AI grasp nuances, desired styles, and specific formats, leading to more accurate and consistent results.</p>
+
+            <div class="mb-8">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">Interactive Example: Few-Shot Prompting</h3>
+                <div class="grid md:grid-cols-1 gap-6">
+                    <div>
+                        <p class="font-medium mb-2">Prompt (With Examples):</p>
+                        <textarea id="examples-prompt" class="w-full mb-4" readonly>Classify the sentiment of the following text.
+
+Text: 'I love this product!' Sentiment: Positive
+Text: 'This movie was okay.' Sentiment: Neutral
+Text: 'The customer service was terrible.' Sentiment: Negative
+Text: 'The new update is buggy.' Sentiment:</textarea>
+                        <button class="btn-primary w-full" onclick="simulateOutput('examples')">Simulate AI Output</button>
+                        <p class="font-medium mt-4 mb-2">Simulated AI Output:</p>
+                        <div id="examples-output" class="output-box">
+                            Negative
+                        </div>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-600 mt-4 italic">The AI learns the classification pattern and the desired output format directly from the provided examples, even for a new input.</p>
+            </div>
+        </section>
+
+        <!-- Complementary Best Practices -->
+        <section class="card">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">3. Complementary Best Practices</h2>
+            <p class="text-lg text-gray-700 mb-8">Beyond the core CTFCE framework, these practices further enhance your prompt engineering skills.</p>
+
+            <!-- Role Prompting -->
+            <div class="mb-8">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">3.1. Role Prompting: Adopting a Persona</h3>
+                <p class="text-lg text-gray-700 mb-4">Assigning the AI a specific role or persona (e.g., "Act as a travel guide") shapes its tone, vocabulary, and perspective, making its output more tailored and appropriate.</p>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="font-medium mb-2">Prompt (No Role):</p>
+                        <textarea id="role-bad-prompt" class="w-full mb-4" readonly>Explain AI to high school students.</textarea>
+                        <button class="btn-primary w-full" onclick="simulateOutput('role-bad')">Simulate AI Output</button>
+                        <p class="font-medium mt-4 mb-2">Simulated AI Output:</p>
+                        <div id="role-bad-output" class="output-box">
+                            Artificial Intelligence (AI) is when computers can do things that usually require human thinking. This includes learning from data, understanding language, recognizing images, and making decisions. AI is used in many everyday technologies like your phone's voice assistant, recommendation systems for movies, and even in self-driving cars. It's a rapidly growing field that's changing how we live and work.
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-medium mb-2">Prompt (With Role: Data Scientist):</p>
+                        <textarea id="role-good-prompt" class="w-full mb-4" readonly>Imagine you are a data scientist explaining the benefits of AI to a group of high school students. Keep it engaging and use analogies they can understand.</textarea>
+                        <button class="btn-primary w-full" onclick="simulateOutput('role-good')">Simulate AI Output</button>
+                        <p class="font-medium mt-4 mb-2">Simulated AI Output:</p>
+                        <div id="role-good-output" class="output-box">
+                            "Hey everyone! As a data scientist, I get to see firsthand how AI is transforming our world. Think of AI like a super-smart detective. Just like a detective sifts through clues (data!) to solve a mystery, AI sifts through massive amounts of information to find patterns and make predictions. For example, your streaming service uses AI to recommend shows you'll love, just like a friend who knows your taste. Or, in medicine, AI helps doctors find tiny patterns in scans that might indicate a disease early, like a super-powered microscope. It's all about using data to make smarter decisions and build cool new tech!"
+                        </div>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-600 mt-4 italic">The role of "data scientist" makes the explanation more authoritative yet relatable, using analogies a scientist might use.</p>
+            </div>
+
+            <!-- Zero-Shot vs. Few-Shot -->
+            <div class="mb-8">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">3.2. Zero-Shot vs. Few-Shot Prompting</h3>
+                <p class="text-lg text-gray-700 mb-4">This refers to the quantity of examples provided. Zero-shot uses no examples, relying on the model's pre-trained knowledge. Few-shot (1 or more examples) helps the model recognize specific patterns for more complex tasks.</p>
+
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <p class="font-medium mb-2">Zero-Shot Prompt (No Examples):</p>
+                        <textarea id="zeroshot-prompt" class="w-full mb-4" readonly>Classify the sentiment of the following text: 'I feel happy.'</textarea>
+                        <button class="btn-primary w-full" onclick="simulateOutput('zeroshot')">Simulate AI Output</button>
+                        <p class="font-medium mt-4 mb-2">Simulated AI Output:</p>
+                        <div id="zeroshot-output" class="output-box">
+                            Positive
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-medium mb-2">Few-Shot Prompt (With Examples - same as 2.5):</p>
+                        <textarea id="fewshot-prompt" class="w-full mb-4" readonly>Classify the sentiment of the following text.
+
+Text: 'I love this product!' Sentiment: Positive
+Text: 'This movie was okay.' Sentiment: Neutral
+Text: 'The customer service was terrible.' Sentiment: Negative
+Text: 'The new update is buggy.' Sentiment:</textarea>
+                        <button class="btn-primary w-full" onclick="simulateOutput('fewshot')">Simulate AI Output</button>
+                        <p class="font-medium mt-4 mb-2">Simulated AI Output:</p>
+                        <div id="fewshot-output" class="output-box">
+                            Negative
+                        </div>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-600 mt-4 italic">Zero-shot works for simple, common tasks. Few-shot is better for nuanced or specific formatting requirements.</p>
+            </div>
+
+            <!-- Iterative Prompting -->
+            <div class="mb-8">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">3.3. Iterative Prompting: The Refinement Loop</h3>
+                <p class="text-lg text-gray-700 mb-4">Prompt engineering is rarely a one-shot process. It's an iterative cycle of testing, reviewing AI output, and refining your prompt until you get the desired result. This is how you "debug" your prompts.</p>
+                <div class="bg-blue-50 p-6 rounded-xl shadow-sm">
+                    <p class="font-medium mb-2">Initial Prompt (Too vague):</p>
+                    <div class="output-box mb-4">Write about cars.</div>
+                    <p class="font-medium mb-2">AI Output (Generic):</p>
+                    <div class="output-box mb-4">A generic paragraph about cars.</div>
+
+                    <p class="font-medium mb-2">Refinement 1 (Adding detail):</p>
+                    <div class="output-box mb-4">Write a 200-word description of electric cars for a tech blog.</div>
+                    <p class="font-medium mb-2">AI Output (Better, but tone is too technical):</p>
+                    <div class="output-box mb-4">Describes electric cars technically, but not engaging for general audience.</div>
+
+                    <p class="font-medium mb-2">Refinement 2 (Adding tone constraint and clarifying focus):</p>
+                    <div class="output-box mb-4">Write a 200-word description of electric cars for a tech blog, aimed at a general audience. Use simple language and focus on benefits for everyday drivers.</div>
+                    <p class="font-medium mb-2">AI Output (Significantly improved, hitting all desired points):</p>
+                    <div class="output-box">A concise, engaging description of electric cars for a general audience, highlighting benefits for daily use.</div>
+                </div>
+                <p class="text-sm text-gray-600 mt-4 italic">Each iteration brings you closer to the perfect output by systematically addressing what went wrong.</p>
+            </div>
+
+            <!-- Common Pitfalls -->
+            <div class="mb-8">
+                <h3 class="text-2xl font-semibold text-gray-700 mb-4">3.4. Common Pitfalls to Avoid</h3>
+                <p class="text-lg text-gray-700 mb-4">Be aware of these common mistakes:</p>
+                <ul class="list-disc list-inside text-lg text-gray-700 space-y-2">
+                    <li><strong class="text-red-600">Being Too Vague or Open-Ended:</strong> The AI doesn't read minds. Provide specific details.</li>
+                    <li><strong class="text-red-600">Overloading the Prompt:</strong> Don't try to do too many unrelated tasks in one prompt. Break them down.</li>
+                    <li><strong class="text-red-600">Ignoring AI's Limitations:</strong> AI is a powerful tool, but it's not infallible. Always fact-check crucial information. It cannot predict the future or perform real-world actions.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Conclusion & Next Steps -->
+        <section class="card">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">4. Putting It All Together & Next Steps</h2>
+            <p class="text-lg text-gray-700 mb-4">Effective prompt engineering is a dynamic skill. The CTFCE framework provides a strong foundation, and complementary practices like role-playing and iterative refinement are crucial.</p>
+            <p class="text-lg text-gray-700 mb-4">Remember, AI models are constantly evolving. A prompt that works today might need slight adjustments tomorrow. Embrace continuous experimentation!</p>
+            <p class="text-lg text-gray-700 mb-4">For continued learning, explore official AI documentation and engage with online communities. Hands-on experimentation with various LLMs is the most effective way to internalize these principles.</p>
+            <p class="text-lg text-gray-700 font-semibold">Happy Prompting!</p>
+        </section>
+
+        <!-- Optional Handout/Cheat Sheet Section -->
+        <section class="card">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">5. Quick Reference: Prompt Engineering Cheat Sheet</h2>
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion('cheat-sheet-content')">
+                    <span>Click to Expand/Collapse Cheat Sheet</span>
+                    <i class="fas fa-chevron-right icon-rotate"></i>
+                </div>
+                <div id="cheat-sheet-content" class="accordion-content">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">CTFCE Framework:</h3>
+                    <ul class="list-disc list-inside text-gray-700 mb-4">
+                        <li><strong class="text-blue-600">Context:</strong> Provide background info. (e.g., "As a marketing manager...")</li>
+                        <li><strong class="text-green-600">Task:</strong> Clear, actionable instructions. (e.g., "Write a blog post...")</li>
+                        <li><strong class="text-purple-600">Format:</strong> Desired output structure. (e.g., "in bullet points," "as JSON")</li>
+                        <li><strong class="text-red-600">Constraints:</strong> Limitations. (e.g., "under 150 words," "friendly tone")</li>
+                        <li><strong class="text-yellow-600">Examples:</strong> Show, don't just tell. (e.g., Input: X, Output: Y)</li>
+                    </ul>
+
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Complementary Practices:</h3>
+                    <ul class="list-disc list-inside text-gray-700 mb-4">
+                        <li><strong class="text-indigo-600">Role Prompting:</strong> Assign a persona. (e.g., "Act as a financial advisor...")</li>
+                        <li><strong class="text-indigo-600">Zero-Shot:</strong> No examples, for simple tasks.</li>
+                        <li><strong class="text-indigo-600">Few-Shot:</strong> With examples, for complex or specific tasks.</li>
+                        <li><strong class="text-indigo-600">Iterative Prompting:</strong> Refine your prompts based on AI output.</li>
+                    </ul>
+
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Avoid:</h3>
+                    <ul class="list-disc list-inside text-gray-700">
+                        <li>Vague or open-ended prompts.</li>
+                        <li>Overloading a single prompt with too many tasks.</li>
+                        <li>Expecting AI to be infallible; always verify critical information.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // Function to simulate AI output based on predefined examples
+        function simulateOutput(exampleId) {
+            let outputDiv = document.getElementById(exampleId + '-output');
+            let simulatedText = '';
+
+            switch (exampleId) {
+                case 'context-bad':
+                    simulatedText = `AI stands for Artificial Intelligence. It's a broad field of computer science that gives machines the ability to perform tasks that typically require human intelligence. This includes learning, problem-solving, decision-making, and understanding language. AI is used in many applications like virtual assistants, recommendation systems, and self-driving cars.`;
+                    break;
+                case 'context-good':
+                    simulatedText = `Recent machine learning advancements have significantly boosted AI's role in predictive analytics for finance. Financial institutions are leveraging AI to enhance fraud detection by identifying unusual transaction patterns, improve credit scoring models with more nuanced risk assessments, and optimize trading strategies through real-time market analysis. AI also aids in personalized financial advice and regulatory compliance by processing vast datasets efficiently.`;
+                    break;
+                case 'task-bad':
+                    simulatedText = `Here is an article:
+The Importance of Daily Exercise
+Regular physical activity is crucial for maintaining good health. It helps in weight management, strengthens bones and muscles, and reduces the risk of chronic diseases such as heart disease and diabetes. Exercise also has significant mental health benefits, reducing stress and improving mood. Incorporating even moderate exercise into your daily routine can lead to a healthier and happier life.`;
+                    break;
+                case 'task-good':
+                    simulatedText = `**Prompt Engineering for Marketers: Your AI Superpower!**
+
+Hey marketers! Ever feel like your AI tools aren't quite "getting" you? You ask for a social media post, and you get something… generic? The secret isn't smarter AI; it's smarter *you* – specifically, how you talk to it. Welcome to the world of prompt engineering, your new superpower for getting amazing results from ChatGPT, Gemini, and other AI models.
+
+Think of prompt engineering as giving your AI crystal-clear instructions. Instead of a vague "Write a blog post," you provide a roadmap: what it's about, who it's for, how long it should be, and even the tone. The more precise you are, the better the AI can predict exactly what you want.
+
+... (truncated for brevity, imagine a full 500-word blog post with examples)`;
+                    break;
+                case 'format-bad':
+                    simulatedText = `The IPCC's latest report underscores the rapid acceleration of global warming, calling for urgent and substantial emission cuts. It outlines how human actions are contributing to rising sea levels, more frequent extreme weather, and the decline of biodiversity. Achieving the 1.5°C warming limit necessitates immediate and broad systemic changes across various sectors like energy, industry, transport, and agriculture. The report also mentions the role of carbon capture and international collaboration.`;
+                    break;
+                case 'format-good':
+                    simulatedText = `* The IPCC report warns of accelerating global warming and the urgent need for drastic emission reductions.
+* Human activities are causing rising sea levels, extreme weather, and biodiversity loss.
+* Limiting warming to 1.5°C requires immediate, widespread systemic changes across all major sectors and international cooperation.`;
+                    break;
+                case 'constraints-bad':
+                    simulatedText = `AI ethics concerns encompass a wide range of issues arising from the development and deployment of artificial intelligence. Key areas include bias and fairness, where AI systems can perpetuate or amplify existing societal biases if not carefully designed and trained. Transparency and explainability are also critical, as it can be difficult to understand how complex AI models arrive at their decisions, raising questions of accountability. Privacy concerns are paramount, given AI's ability to process vast amounts of personal data. Other issues involve job displacement due to automation, the potential for autonomous weapons, and the broader societal impact on human agency and decision-making. Ensuring robust governance and regulation is essential to navigate these complex ethical landscapes responsibly.`;
+                    break;
+                case 'constraints-good':
+                    simulatedText = `AI ethics concerns are multifaceted. Bias and fairness are major issues, as AI can reflect or amplify societal prejudices from its training data, leading to discriminatory outcomes. Transparency and explainability are critical; understanding how AI makes decisions is vital for trust and accountability, especially in sensitive applications. Privacy is another key concern, given AI's capacity to collect and analyze vast personal datasets. The potential for job displacement due to automation raises socio-economic questions. Additionally, the development of autonomous weapons systems and the broader impact on human agency and control are significant ethical dilemmas. Addressing these requires careful design, regulation, and ongoing societal dialogue.`;
+                    break;
+                case 'examples':
+                case 'fewshot': // Few-shot example is the same as the main examples section
+                    simulatedText = `Negative`;
+                    break;
+                case 'role-bad':
+                    simulatedText = `Artificial Intelligence (AI) is when computers can do things that usually require human thinking. This includes learning from data, understanding language, recognizing images, and making decisions. AI is used in many everyday technologies like your phone's voice assistant, recommendation systems for movies, and even in self-driving cars. It's a rapidly growing field that's changing how we live and work.`;
+                    break;
+                case 'role-good':
+                    simulatedText = `"Hey everyone! As a data scientist, I get to see firsthand how AI is transforming our world. Think of AI like a super-smart detective. Just like a detective sifts through clues (data!) to solve a mystery, AI sifts through massive amounts of information to find patterns and make predictions. For example, your streaming service uses AI to recommend shows you'll love, just like a friend who knows your taste. Or, in medicine, AI helps doctors find tiny patterns in scans that might indicate a disease early, like a super-powered microscope. It's all about using data to make smarter decisions and build cool new tech!"`;
+                    break;
+                case 'zeroshot':
+                    simulatedText = `Positive`;
+                    break;
+                default:
+                    simulatedText = 'No simulated output available for this example.';
+            }
+            outputDiv.textContent = simulatedText;
+        }
+
+        // Accordion functionality for the cheat sheet
+        function toggleAccordion(contentId) {
+            const content = document.getElementById(contentId);
+            const icon = content.previousElementSibling.querySelector('.icon-rotate');
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                icon.classList.remove('rotated');
+            } else {
+                content.classList.add('active');
+                icon.classList.add('rotated');
+            }
+        }
+    </script>
+</body>
+</html>
